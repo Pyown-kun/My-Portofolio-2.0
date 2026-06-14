@@ -1,8 +1,4 @@
 
-  # Buat Portofolio Interaktif
-
-  This is a code bundle for Buat Portofolio Interaktif. The original project is available at https://www.figma.com/design/TVUkwPaqKnVXS0s6nd0bpU/Buat-Portofolio-Interaktif.
-
   ## Running the code
 
   Run `npm i` to install the dependencies.
