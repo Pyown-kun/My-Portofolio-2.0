@@ -166,7 +166,7 @@ export function AboutSection() {
                 }}
               >
                 <img
-                  src="src\app\components\Asset\FotoSayaHitamPutih.png"
+                  src="https://drive.google.com/uc?export=view&id=1OZ6Epg3JE7TEULPKqIjjJiz8FkPS2GMs"
                   alt="Andrea Ramadhan Cahya Aryana"
                   style={{
                     width: "100%",
