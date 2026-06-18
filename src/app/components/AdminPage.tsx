@@ -13,11 +13,12 @@
  * Dependensi: React, lucide-react (sudah ada di project)
  */
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import {
   Eye, EyeOff, LogOut, Plus, Pencil, Trash2,
   Save, X, Download, Copy, ChevronRight,
   Gamepad2, Folder, Settings, ExternalLink,
+  Upload, ImageIcon, AlertCircle,
 } from "lucide-react";
 
 /* ─────────────────────────────────────────────
@@ -52,11 +53,11 @@ export interface GameEmbed {
    DEFAULT DATA (sama seperti source asli)
 ───────────────────────────────────────────── */
 const DEFAULT_PROJECTS: Project[] = [
-  { id: 1, title: "Retro Pixel Platformer", category: "Game Development", year: "2024", stack: ["Unity", "C#", "Pixel Art", "Aseprite"], desc: "Game platformer 2D bergaya retro pixel art yang dibangun bersama tim indie. Dilengkapi mekanisme physics kustom, sistem level dengan checkpoint, dan score system berbasis koin.", image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=700&h=420&fit=crop&auto=format", color: "#2563eb", status: "COMPLETED", github: "", demo: "" },
+  { id: 1, title: "Retro Pixel Platformer", category: "Game Development", year: "2024", stack: ["Unity", "C#", "Pixel Art", "Aseprite"], desc: "Game platformer 2D bergaya retro pixel art yang dibangun bersama tim indie. Dilengkapi mekanisme physics kustom, sistem level dengan checkpoint, dan score system berbasis koin.", image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=700&h=420&fit=crop&auto=format", color: "#7c3aed", status: "COMPLETED", github: "", demo: "" },
   { id: 2, title: "3D Environment: Fantasy Forest", category: "3D Modeling", year: "2024", stack: ["Blender", "Unity", "PBR Textures", "Low-poly"], desc: "Environment 3D bertema fantasy forest untuk digunakan sebagai latar belakang game RPG. Menggunakan teknik low-poly dan PBR texturing untuk performa optimal di mobile.", image: "https://images.unsplash.com/photo-1518709766631-a6a7f45921c3?w=700&h=420&fit=crop&auto=format", color: "#059669", status: "COMPLETED", github: "", demo: "" },
   { id: 3, title: "Student Task Web App", category: "Web Development", year: "2023", stack: ["HTML", "CSS", "JavaScript", "PHP"], desc: "Aplikasi web sederhana untuk membantu mahasiswa menyelesaikan tugas perkuliahan. Fitur meliputi manajemen tugas, deadline tracker, dan sistem pengumpulan file.", image: "https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=700&h=420&fit=crop&auto=format", color: "#0ea5e9", status: "COMPLETED", github: "", demo: "" },
   { id: 4, title: "Karakter 2D: Warrior Series", category: "Character Design", year: "2023", stack: ["Procreate", "Photoshop", "Illustrator", "Figma"], desc: "Seri desain karakter 2D bergaya anime untuk klien indie game. Terdiri dari 6 karakter dengan berbagai kelas—warrior, mage, archer—masing-masing dengan sprite sheet animasi.", image: "https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=700&h=420&fit=crop&auto=format", color: "#f59e0b", status: "COMPLETED", github: "", demo: "" },
-  { id: 5, title: "Agate Academy — Game Project", category: "Internship", year: "2023", stack: ["Unity", "C#", "Agile", "Git"], desc: "Proyek game saat magang di Agate Academy sebagai Programmer Game Dev. Berkontribusi pada pengembangan sistem gameplay, AI musuh, dan integrasi aset visual dengan tim 8 orang.", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=700&h=420&fit=crop&auto=format", color: "#60a5fa", status: "INTERNSHIP", github: "", demo: "" },
+  { id: 5, title: "Agate Academy — Game Project", category: "Internship", year: "2023", stack: ["Unity", "C#", "Agile", "Git"], desc: "Proyek game saat magang di Agate Academy sebagai Programmer Game Dev. Berkontribusi pada pengembangan sistem gameplay, AI musuh, dan integrasi aset visual dengan tim 8 orang.", image: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=700&h=420&fit=crop&auto=format", color: "#a855f7", status: "INTERNSHIP", github: "", demo: "" },
   { id: 6, title: "Blender Character — Sci-Fi Soldier", category: "3D Modeling", year: "2024", stack: ["Blender", "Substance Painter", "Rigging", "UV Unwrap"], desc: "Model karakter 3D tema sci-fi untuk portfolio pribadi. Lengkap dengan rigging dan weight painting untuk animasi, serta texture berkualitas tinggi menggunakan Substance Painter.", image: "https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=700&h=420&fit=crop&auto=format", color: "#ec4899", status: "PERSONAL", github: "", demo: "" },
 ];
 
@@ -93,14 +94,14 @@ const newId = () => ++_idCounter;
    COLOUR PALETTE SWATCHES
 ───────────────────────────────────────────── */
 const SWATCHES = [
-  "#2563eb", "#60a5fa", "#ec4899", "#ef4444",
+  "#7c3aed", "#a855f7", "#ec4899", "#ef4444",
   "#f59e0b", "#059669", "#10b981", "#0ea5e9",
   "#3b82f6", "#6366f1",
 ];
 
 const ENGINE_COLORS: Record<string, string> = {
   Unity: "#10b981", Unreal: "#ef4444", Godot: "#3b82f6",
-  Construct: "#f59e0b", GDevelop: "#818cf8", Custom: "#60a5fa",
+  Construct: "#f59e0b", GDevelop: "#818cf8", Custom: "#a855f7",
 };
 
 /* ─────────────────────────────────────────────
@@ -111,10 +112,10 @@ const S = {
   bg: "#0d0d1e",
   bg2: "#12121e",
   bg3: "#1a1a2e",
-  purple: "#60a5fa",
-  purple2: "#2563eb",
-  border: "rgba(37,99,235,0.25)",
-  border2: "rgba(37,99,235,0.5)",
+  purple: "#a855f7",
+  purple2: "#7c3aed",
+  border: "rgba(124,58,237,0.25)",
+  border2: "rgba(124,58,237,0.5)",
   text: "#e8e8f0",
   muted: "#8888aa",
   muted2: "#c4c4d4",
@@ -192,7 +193,7 @@ function Btn({ children, variant = "default", onClick, style: s }: {
     primary: { background: `linear-gradient(135deg, ${S.purple2}, ${S.purple})`, color: "#fff", clipPath: "polygon(0 0,calc(100% - 7px) 0,100% 7px,100% 100%,7px 100%,0 calc(100% - 7px))" },
     danger: { background: "rgba(239,68,68,0.12)", border: `1px solid rgba(239,68,68,0.35)`, color: S.red },
     ghost: { background: "none", border: `1px solid ${S.border}`, color: S.muted },
-    default: { background: `rgba(37,99,235,0.2)`, border: `1px solid ${S.border2}`, color: S.purple },
+    default: { background: `rgba(124,58,237,0.2)`, border: `1px solid ${S.border2}`, color: S.purple },
   };
   return <button onClick={onClick} style={{ ...base, ...variants[variant], ...s }}>{children}</button>;
 }
@@ -212,7 +213,7 @@ function StackEditor({ stack, onChange }: { stack: string[]; onChange: (s: strin
       <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", marginBottom: "6px" }}>
         {stack.map(t => (
           <span key={t} style={{
-            background: "rgba(37,99,235,0.12)", border: `1px solid rgba(37,99,235,0.3)`,
+            background: "rgba(124,58,237,0.12)", border: `1px solid rgba(124,58,237,0.3)`,
             color: S.muted2, fontSize: "0.6rem", letterSpacing: "0.06em",
             padding: "2px 8px", display: "inline-flex", alignItems: "center", gap: "5px",
           }}>
@@ -312,6 +313,187 @@ function LoginScreen({ onLogin }: { onLogin: () => void }) {
 }
 
 /* ─────────────────────────────────────────────
+   IMAGE UPLOADER — local file → base64
+   Gambar disimpan sebagai data URI di localStorage
+   sehingga bisa dilihat semua orang tanpa server
+───────────────────────────────────────────── */
+const MAX_SIZE_MB = 2;
+const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024;
+const ACCEPTED = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+
+function ImageUploader({
+  value,
+  onChange,
+}: {
+  value: string;
+  onChange: (base64: string) => void;
+}) {
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [dragOver, setDragOver] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const processFile = (file: File) => {
+    setError("");
+    if (!ACCEPTED.includes(file.type)) {
+      setError("Format tidak didukung. Gunakan JPG, PNG, WebP, atau GIF.");
+      return;
+    }
+    if (file.size > MAX_SIZE_BYTES) {
+      setError(`Ukuran file terlalu besar. Maksimal ${MAX_SIZE_MB}MB.`);
+      return;
+    }
+    setLoading(true);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const result = e.target?.result as string;
+      // Compress via canvas jika lebih dari 500KB
+      if (file.size > 500 * 1024) {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const MAX_W = 900;
+          const ratio = Math.min(MAX_W / img.width, 1);
+          canvas.width = Math.round(img.width * ratio);
+          canvas.height = Math.round(img.height * ratio);
+          const ctx = canvas.getContext("2d")!;
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          const compressed = canvas.toDataURL("image/jpeg", 0.82);
+          onChange(compressed);
+          setLoading(false);
+        };
+        img.src = result;
+      } else {
+        onChange(result);
+        setLoading(false);
+      }
+    };
+    reader.onerror = () => { setError("Gagal membaca file."); setLoading(false); };
+    reader.readAsDataURL(file);
+  };
+
+  const onFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) processFile(file);
+    e.target.value = "";
+  };
+
+  const onDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) processFile(file);
+  };
+
+  const isBase64 = value.startsWith("data:");
+  const isUrl = value.startsWith("http");
+
+  return (
+    <div style={{ marginBottom: "0.75rem" }}>
+      <label style={labelStyle}>GAMBAR PROYEK</label>
+
+      {/* Drop Zone */}
+      <div
+        onClick={() => fileRef.current?.click()}
+        onDragOver={e => { e.preventDefault(); setDragOver(true); }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={onDrop}
+        style={{
+          border: `2px dashed ${dragOver ? S.purple : error ? S.red : S.border}`,
+          background: dragOver ? "rgba(124,58,237,0.08)" : "rgba(255,255,255,0.02)",
+          padding: "1rem",
+          cursor: "pointer",
+          transition: "all 0.2s",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "6px",
+          minHeight: "80px",
+          position: "relative",
+        }}>
+        <input
+          ref={fileRef}
+          type="file"
+          accept={ACCEPTED.join(",")}
+          onChange={onFileChange}
+          style={{ display: "none" }}
+        />
+        {loading ? (
+          <div style={{ color: S.muted, fontSize: "0.68rem", letterSpacing: "0.1em" }}>
+            ⏳ Memproses gambar...
+          </div>
+        ) : value ? (
+          <div style={{ width: "100%", display: "flex", gap: "12px", alignItems: "center" }}>
+            {/* Preview thumbnail */}
+            <div style={{ width: "120px", height: "70px", flexShrink: 0, overflow: "hidden", border: `1px solid ${S.border}` }}>
+              <img
+                src={value}
+                alt="preview"
+                style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.8)" }}
+              />
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ color: S.green, fontSize: "0.65rem", letterSpacing: "0.1em", marginBottom: "4px" }}>
+                ✓ {isBase64 ? "File lokal (base64)" : "URL eksternal"}
+              </div>
+              {isBase64 && (
+                <div style={{ color: S.muted, fontSize: "0.6rem" }}>
+                  Ukuran: ~{Math.round(value.length * 0.75 / 1024)}KB tersimpan
+                </div>
+              )}
+              {isUrl && (
+                <div style={{ color: S.muted, fontSize: "0.6rem", wordBreak: "break-all" }}>
+                  {value.substring(0, 55)}...
+                </div>
+              )}
+              <div style={{ color: S.purple, fontSize: "0.6rem", marginTop: "4px", letterSpacing: "0.08em" }}>
+                Klik / drag untuk ganti gambar
+              </div>
+            </div>
+            <button
+              onClick={e => { e.stopPropagation(); onChange(""); }}
+              style={{ background: "none", border: "none", cursor: "pointer", color: S.red, flexShrink: 0, padding: "4px" }}
+              title="Hapus gambar">
+              <X size={16} />
+            </button>
+          </div>
+        ) : (
+          <>
+            <Upload size={22} color={S.muted} />
+            <div style={{ color: S.muted2, fontSize: "0.68rem", letterSpacing: "0.06em", textAlign: "center" }}>
+              Drag & drop atau <span style={{ color: S.purple }}>klik untuk pilih file</span>
+            </div>
+            <div style={{ color: S.muted, fontSize: "0.58rem", letterSpacing: "0.08em" }}>
+              JPG · PNG · WebP · GIF — maks. {MAX_SIZE_MB}MB
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Error */}
+      {error && (
+        <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "5px", color: S.red, fontSize: "0.62rem" }}>
+          <AlertCircle size={12} /> {error}
+        </div>
+      )}
+
+      {/* Info banner */}
+      <div style={{
+        marginTop: "6px", background: "rgba(16,185,129,0.06)",
+        border: "1px solid rgba(16,185,129,0.2)",
+        padding: "6px 10px", fontSize: "0.6rem", color: "#6ee7b7",
+        letterSpacing: "0.06em", lineHeight: 1.6,
+      }}>
+        💡 Gambar dikonversi ke <strong>base64</strong> dan disimpan langsung di browser —
+        tidak butuh hosting eksternal. Gambar akan tampil sama di semua pengunjung
+        yang memuat data dari sumber yang sama.
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
    PROJECT FORM
 ───────────────────────────────────────────── */
 function ProjectForm({
@@ -321,7 +503,7 @@ function ProjectForm({
   onSave: (p: Project) => void;
   onCancel: () => void;
 }) {
-  const blank: Project = { id: newId(), title: "", category: "Game Development", year: "2024", stack: [], desc: "", image: "", color: "#60a5fa", status: "COMPLETED", github: "", demo: "" };
+  const blank: Project = { id: newId(), title: "", category: "Game Development", year: "2024", stack: [], desc: "", image: "", color: "#a855f7", status: "COMPLETED", github: "", demo: "" };
   const [form, setForm] = useState<Project>(initial ?? blank);
 
   const set = (k: keyof Project, v: unknown) => setForm(f => ({ ...f, [k]: v }));
@@ -358,15 +540,10 @@ function ProjectForm({
         <Textarea value={form.desc} onChange={e => set("desc", e.target.value)} placeholder="Deskripsi proyek..." />
       </Field>
 
-      <Field label="URL GAMBAR (Unsplash / CDN / lokal)">
-        <Input value={form.image} onChange={e => set("image", e.target.value)} placeholder="https://images.unsplash.com/..." />
-      </Field>
-
-      {form.image && (
-        <div style={{ marginBottom: "0.75rem", height: "80px", overflow: "hidden", border: `1px solid ${S.border}` }}>
-          <img src={form.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", filter: "brightness(0.7)" }} />
-        </div>
-      )}
+      <ImageUploader
+        value={form.image}
+        onChange={v => set("image", v)}
+      />
 
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.8rem" }}>
         <Field label="URL GITHUB">
@@ -717,6 +894,57 @@ function GamesTab() {
 }
 
 /* ─────────────────────────────────────────────
+   STORAGE USAGE INDICATOR
+   Menampilkan estimasi pemakaian localStorage
+   (penting karena gambar base64 cukup besar)
+───────────────────────────────────────────── */
+function StorageUsage() {
+  const getUsage = () => {
+    try {
+      let total = 0;
+      for (const key of Object.values(STORE)) {
+        const val = localStorage.getItem(key);
+        if (val) total += val.length * 2; // UTF-16 = 2 bytes per char
+      }
+      return total;
+    } catch { return 0; }
+  };
+
+  const used = getUsage();
+  const usedKB = Math.round(used / 1024);
+  const usedMB = (used / (1024 * 1024)).toFixed(2);
+  const MAX_BYTES = 5 * 1024 * 1024; // localStorage ~5MB
+  const pct = Math.min(100, Math.round((used / MAX_BYTES) * 100));
+  const barColor = pct > 80 ? S.red : pct > 50 ? S.amber : S.green;
+
+  return (
+    <div style={{ background: "rgba(0,0,0,0.2)", border: `1px solid ${S.border}`, padding: "0.75rem 1rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
+        <span style={{ color: S.muted, fontSize: "0.6rem", letterSpacing: "0.15em" }}>PEMAKAIAN LOCALSTORAGE</span>
+        <span style={{ color: barColor, fontSize: "0.65rem", fontWeight: 700 }}>
+          {usedKB >= 1024 ? `${usedMB} MB` : `${usedKB} KB`} / ~5 MB ({pct}%)
+        </span>
+      </div>
+      <div style={{ height: "4px", background: "rgba(255,255,255,0.08)", borderRadius: "2px", overflow: "hidden" }}>
+        <div style={{ height: "100%", width: `${pct}%`, background: barColor, transition: "width 0.4s, background 0.3s" }} />
+      </div>
+      {pct > 70 && (
+        <div style={{ display: "flex", alignItems: "center", gap: "5px", marginTop: "6px", color: S.amber, fontSize: "0.6rem" }}>
+          <AlertCircle size={11} />
+          {pct > 80
+            ? "Penyimpanan hampir penuh! Export JSON lalu reset, atau kecilkan ukuran gambar."
+            : "Penyimpanan mulai terisi. Pertimbangkan untuk menggunakan gambar yang lebih kecil."}
+        </div>
+      )}
+      <div style={{ color: S.muted, fontSize: "0.58rem", marginTop: "5px", letterSpacing: "0.05em" }}>
+        Tip: Gambar base64 dari foto resolusi tinggi bisa memakan 200–400KB per gambar.
+        Disarankan resize foto ke 900×540px sebelum upload.
+      </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────────────────────────
    SETTINGS TAB
 ───────────────────────────────────────────── */
 function SettingsTab() {
@@ -801,10 +1029,14 @@ function SettingsTab() {
         <div style={{ color: S.purple, fontSize: "0.62rem", letterSpacing: "0.2em", marginBottom: "1rem", paddingBottom: "0.5rem", borderBottom: `1px solid ${S.border}` }}>
           📦 EXPORT DATA
         </div>
-        <p style={{ color: S.muted2, fontSize: "0.72rem", lineHeight: 1.6, marginBottom: "1rem" }}>
-          Unduh semua data proyek dan game dalam format JSON, lalu copy isi array <code style={{ color: S.purple, fontSize: "0.72rem" }}>PROJECTS</code> dan <code style={{ color: S.purple, fontSize: "0.72rem" }}>GAMES</code> ke source code komponen kamu.
+        <p style={{ color: S.muted2, fontSize: "0.72rem", lineHeight: 1.6, marginBottom: "0.6rem" }}>
+          Unduh semua data proyek dan game dalam format JSON. Gambar yang diupload lokal sudah tersimpan sebagai base64 di dalam JSON — tidak perlu file terpisah.
         </p>
-        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+
+        {/* Storage usage indicator */}
+        <StorageUsage />
+
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", marginTop: "1rem" }}>
           <Btn variant="primary" onClick={exportJSON}><Download size={13} /> EXPORT JSON</Btn>
           <Btn onClick={copyToClipboard}><Copy size={13} /> COPY CLIPBOARD</Btn>
           <Btn variant="danger" onClick={resetToDefault}><X size={13} /> RESET KE BAWAAN</Btn>
@@ -914,9 +1146,9 @@ export function GameEmbedPlayer({ games }: { games: GameEmbed[] }) {
           {games.map((g, i) => (
             <button key={g.id} onClick={() => setActive(i)}
               style={{
-                background: i === active ? "rgba(37,99,235,0.3)" : "rgba(37,99,235,0.1)",
-                border: `1px solid ${i === active ? "rgba(168,85,247,0.6)" : "rgba(37,99,235,0.25)"}`,
-                color: i === active ? "#60a5fa" : "#8888aa",
+                background: i === active ? "rgba(124,58,237,0.3)" : "rgba(124,58,237,0.1)",
+                border: `1px solid ${i === active ? "rgba(168,85,247,0.6)" : "rgba(124,58,237,0.25)"}`,
+                color: i === active ? "#a855f7" : "#8888aa",
                 fontFamily: "'JetBrains Mono', monospace", fontSize: "0.65rem",
                 letterSpacing: "0.12em", padding: "5px 14px", cursor: "pointer",
               }}>
@@ -937,7 +1169,7 @@ export function GameEmbedPlayer({ games }: { games: GameEmbed[] }) {
       </div>
 
       {/* Iframe */}
-      <div style={{ position: "relative", width: "100%", paddingTop: `${(game.height / game.width) * 100}%`, background: "#000", border: "1px solid rgba(37,99,235,0.3)", overflow: "hidden" }}>
+      <div style={{ position: "relative", width: "100%", paddingTop: `${(game.height / game.width) * 100}%`, background: "#000", border: "1px solid rgba(124,58,237,0.3)", overflow: "hidden" }}>
         <iframe
           src={game.url}
           allow="autoplay; fullscreen; gamepad"
